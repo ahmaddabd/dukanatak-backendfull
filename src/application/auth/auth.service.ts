@@ -1,16 +1,15 @@
-
-import { Injectable } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
-import { UserRepository } from '../../infrastructure/repositories/user.repository';
-import { RegisterDto } from './dto/register.dto';
-import { LoginDto } from './dto/login.dto';
-import * as bcryptjs from 'bcryptjs';
+import { Injectable } from "@nestjs/common";
+import { JwtService } from "@nestjs/jwt";
+import { UserRepository } from "../../infrastructure/repositories/user.repository";
+import { RegisterDto } from "./dto/register.dto";
+import { LoginDto } from "./dto/login.dto";
+import * as bcryptjs from "bcryptjs";
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly userRepository: UserRepository,
-    private readonly jwtService: JwtService,
+    private readonly jwtService: JwtService
   ) {}
 
   async register(registerDto: RegisterDto) {
@@ -24,7 +23,7 @@ export class AuthService {
 
   async validateUser(loginDto: LoginDto) {
     const user = await this.userRepository.findByEmail(loginDto.email);
-    if (user && await bcryptjs.compare(loginDto.password, user.password)) {
+    if (user && (await bcryptjs.compare(loginDto.password, user.password))) {
       const { password, ...result } = user;
       return result;
     }
